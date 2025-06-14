@@ -17,7 +17,7 @@ A secure, end-to-end encrypted command-line chat tool built on top of [ntfy](htt
 ### 🔧 Global (from source)
 
 ```bash
-git clone https://github.com/carlostkd/k4li-chat-cli.git
+git clone https://github.com/carlostkd/k4li-chat.git
 cd k4li-chat-cli
 npm install
 npm link

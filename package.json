@@ -1,0 +1,50 @@
+{
+  "name": "k4li-chat-cli",
+  "version": "1.0.0",
+  "description": "A secure end-to-end encrypted chat CLI tool powered by Carlostkd.",
+  "main": "index.js",
+  "bin": {
+    "k4li-chat": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "lint": "echo \"Add a linter like ESLint for real checking\"",
+    "test": "echo \"No test specified yet\" && exit 1"
+  },
+  "keywords": [
+    "ntfy",
+    "chat",
+    "e2ee",
+    "cli",
+    "encryption",
+    "messaging",
+    "secure-chat"
+  ],
+  "author": "Carlostkd",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "chalk": "^5.3.0",
+    "commander": "^11.0.0",
+    "crypto-js": "^4.2.0",
+    "inquirer": "^9.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.29.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-import": "^2.31.0",
+    "prettier": "^3.5.3"
+  },
+"scripts": {
+  "start": "node index.js",
+  "lint": "eslint . --ext .js",
+  "format": "prettier --write .",
+  "test": "echo \"No test specified yet\" && exit 1"
+}
+
+
+}

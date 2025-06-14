@@ -7,6 +7,10 @@ A secure, end-to-end encrypted command-line chat tool built on top of [ntfy](htt
 - 🔐 End-to-end encryption (E2EE) using AES-256
 - 📡 Works with both public and private ntfy servers
 - 🧩 Cross-platform support
+- Typing indicators
+- Emoji support (via `:smile:` style shortcuts)
+- Join/leave notifications
+
 - 🌐 Zero server knowledge — all encryption happens on the client
 - 🕵️ Anonymous and open source
 

@@ -13,7 +13,7 @@ function decryptMessage(encryptedText, password) {
   try {
     const bytes = CryptoJS.AES.decrypt(encryptedText, password);
     return bytes.toString(CryptoJS.enc.Utf8);
-  } catch (err) {
+  } catch {
     return null;
   }
 }
@@ -46,29 +46,46 @@ program
 
     const { server, room, password } = answers;
     const topicUrl = `${server.replace(/\/$/, '')}/${room}`;
-    let lastTime = Date.now();
+
+    let lastTime = 0;
 
     console.log(chalk.green(`\n[+] Joined room "${room}" on ${server}`));
-    console.log(chalk.blue(`[🔐] Messages are encrypted end-to-end.\n`));
+    console.log(chalk.blue(`[🔐] Messages are end-to-end encrypted with AES-256.`));
+    console.log(chalk.gray(`[⏳] Polling for new messages every 4 seconds...\n`));
 
-    // Start msg in background
+   
     setInterval(async () => {
       try {
-        const res = await axios.get(`${topicUrl}.json?since=${lastTime}`);
+        const res = await axios.get(topicUrl, {
+          headers: {
+            Accept: 'application/json'
+          },
+          params: {
+            since: lastTime || 0
+          }
+        });
+
         const messages = res.data;
+
         for (const msg of messages) {
-          lastTime = Math.max(lastTime, msg.time);
+          if (!msg || !msg.message || !msg.time) continue;
+
           const decrypted = decryptMessage(msg.message, password);
           if (decrypted) {
             console.log(chalk.cyan(`\n[🔓] ${decrypted}`));
+            lastTime = Math.max(lastTime, msg.time);
           }
         }
       } catch (err) {
-        console.log(chalk.red(`[!] Failed to fetch messages: ${err.message}`));
+        if (err.response?.status === 404) {
+          console.log(chalk.yellow(`[!] Waiting for topic "${room}" to receive messages...`));
+        } else {
+          console.log(chalk.red(`[!] Error polling messages: ${err.message}`));
+        }
       }
     }, 4000);
 
-    // Prompt user for messages
+    // Message sending 
     while (true) {
       const input = await inquirer.prompt([
         {
@@ -82,12 +99,11 @@ program
 
       try {
         await axios.post(topicUrl, encrypted);
-        console.log(chalk.gray('Sent.'));
+        console.log(chalk.gray('✔ Message sent'));
       } catch (err) {
-        console.log(chalk.red('[!] Failed to send message.'));
+        console.log(chalk.red('[!] Failed to send message. Server error.'));
       }
     }
   });
 
-program.parse(process.argv);
 

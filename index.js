@@ -9,6 +9,15 @@ import CryptoJS from 'crypto-js';
 const program = new Command();
 program.version('1.0.0');
 
+function decryptMessage(encryptedText, password) {
+  try {
+    const bytes = CryptoJS.AES.decrypt(encryptedText, password);
+    return bytes.toString(CryptoJS.enc.Utf8);
+  } catch (err) {
+    return null;
+  }
+}
+
 program
   .description('Encrypted chat over ntfy')
   .action(async () => {
@@ -36,11 +45,30 @@ program
     ]);
 
     const { server, room, password } = answers;
+    const topicUrl = `${server.replace(/\/$/, '')}/${room}`;
+    let lastTime = Date.now();
 
     console.log(chalk.green(`\n[+] Joined room "${room}" on ${server}`));
-    console.log(chalk.blue(`[🔐] Messages will be encrypted with your password.\n`));
+    console.log(chalk.blue(`[🔐] Messages are encrypted end-to-end.\n`));
 
-    // Start sending loop
+    // Start msg in background
+    setInterval(async () => {
+      try {
+        const res = await axios.get(`${topicUrl}.json?since=${lastTime}`);
+        const messages = res.data;
+        for (const msg of messages) {
+          lastTime = Math.max(lastTime, msg.time);
+          const decrypted = decryptMessage(msg.message, password);
+          if (decrypted) {
+            console.log(chalk.cyan(`\n[🔓] ${decrypted}`));
+          }
+        }
+      } catch (err) {
+        console.log(chalk.red(`[!] Failed to fetch messages: ${err.message}`));
+      }
+    }, 4000);
+
+    // Prompt user for messages
     while (true) {
       const input = await inquirer.prompt([
         {
@@ -53,12 +81,13 @@ program
       const encrypted = CryptoJS.AES.encrypt(input.message, password).toString();
 
       try {
-        await axios.post(`${server}/${room}`, encrypted);
-        console.log(chalk.gray('Sent encrypted message.'));
+        await axios.post(topicUrl, encrypted);
+        console.log(chalk.gray('Sent.'));
       } catch (err) {
-        console.log(chalk.red('[!] Failed to send message. Server error.'));
+        console.log(chalk.red('[!] Failed to send message.'));
       }
     }
   });
 
 program.parse(process.argv);
+

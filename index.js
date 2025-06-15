@@ -59,9 +59,12 @@ program
 
     const topicUrl = `${server.replace(/\/$/, '')}/${room}`;
     const sseUrl = `${topicUrl}/sse`;
+
     const ecdh = createECDH('secp256k1');
     ecdh.generateKeys();
     const myPublicKey = ecdh.getPublicKey('hex');
+    const announceKey = sha256('k4li-chat-announce-key');
+
     const peers = new Map();
 
     function getColor(name) {
@@ -85,7 +88,12 @@ program
     console.log(chalk.blue(`🔐 Secure chat ready — waiting on peers...\n`));
 
     async function broadcastPublicKey() {
-      const handshake = { type: 'public-key', username, publicKey: myPublicKey };
+      const hiddenPayload = aesEncrypt(JSON.stringify({ username, ts: Date.now() }), announceKey);
+      const handshake = {
+        type: 'public-key',
+        publicKey: myPublicKey,
+        payload: hiddenPayload
+      };
       await axios.post(topicUrl, JSON.stringify(handshake), {
         headers: { 'Content-Type': 'text/plain' }
       }).catch(() => {});
@@ -114,19 +122,26 @@ program
         method: 'GET',
         headers: { Accept: 'text/event-stream' }
       });
+
       const parser = createParser({
         onEvent(event) {
           if (!event.data) return;
           try {
             const raw = JSON.parse(event.data);
             const data = typeof raw.message === 'string' ? JSON.parse(raw.message) : raw;
-            if (data.type === 'public-key' && data.publicKey && data.username !== username) {
+
+            if (data.type === 'public-key' && data.publicKey !== myPublicKey) {
               if (!peers.has(data.publicKey)) {
                 const shared = ecdh.computeSecret(Buffer.from(data.publicKey, 'hex')).toString('hex');
                 const aesKey = sha256(shared);
-                peers.set(data.publicKey, { key: aesKey, username: data.username, lastSeen: Date.now() });
-                getColor(data.username);
-                redraw(chalk.yellow(`🔑 Key exchange completed with ${data.username}`));
+                const userInfo = JSON.parse(aesDecrypt(data.payload, announceKey));
+                peers.set(data.publicKey, {
+                  key: aesKey,
+                  username: userInfo.username || 'unknown',
+                  lastSeen: Date.now()
+                });
+                getColor(userInfo.username);
+                redraw(chalk.yellow(`🔑 Key exchange completed with ${userInfo.username}`));
               } else {
                 peers.get(data.publicKey).lastSeen = Date.now();
               }
@@ -146,6 +161,7 @@ program
               const peer = peers.get(data.from);
               if (peer) redraw(chalk.gray(`[✍] ${peer.username} is typing...`));
             }
+
           } catch {}
         }
       });
@@ -185,13 +201,11 @@ program
       }
 
       if (message === '/help') {
-        console.log(chalk.blueBright(`
-Available Commands:
+        console.log(chalk.blueBright(`Available Commands:
 /who         - Show list of active peers
 /msg NAME TEXT - Send a direct message
 /refresh     - Re-send your public key
-/help        - Show this help menu
-        `.trim()));
+/help        - Show this help menu`));
         rl.prompt();
         return;
       }
@@ -240,5 +254,6 @@ Available Commands:
   });
 
 program.parse(process.argv);
+
 
 

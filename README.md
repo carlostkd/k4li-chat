@@ -18,6 +18,76 @@ with real-time messaging ECDH-based encryption DM support and zero server trust.
 
 ---
 
+# 🛡️ Use Cases for k4li-chat-cli
+
+`k4li-chat-cli` is more than a simple command-line chat 
+
+— it's a privacy-first tool designed for real-world scenarios where mainstream messaging fails or can't be trusted.
+
+---
+
+## 🌐 When to Use
+
+### 🔓 On Untrusted Networks
+Whether you're in a public coffee shop, a hotel, or a remote co-working space, 
+
+`k4li-chat-cli` encrypts messages end-to-end using ECDH and AES-256, meaning **no one — not even the server — can read your messages**.
+
+**Perfect for:**
+- Traveling developers and digital nomads
+- Hackerspaces and CTFs
+- Public Wi-Fi use
+
+---
+
+### 🕵️ When You Can't Use Your Default Messenger
+Sometimes your default apps aren't accessible — due to firewalls, platform restrictions, or simply unavailability.
+
+**Ideal for:**
+- Censorship circumvention
+- Messaging without an account
+- Quick communications without app installs
+
+---
+
+### 👥 When Interlocutors Use Different Platforms
+You use Signal, they use Telegram. You prefer Matrix, they only use WhatsApp.
+
+Skip the compatibility drama. `k4li-chat-cli` works for everyone with:
+- A terminal
+- Internet access
+
+**No accounts, no installs, no gatekeeping.**
+
+---
+
+## ✍️ For Journalists, Activists & Whistleblowers
+
+- **Anonymous, encrypted by design**
+- **Peer discovery via public or private ntfy servers**
+- **Nothing stored on disk or visible in chat history**
+- **Command-line interface leaves minimal forensic footprint**
+
+---
+
+## 🧑‍💻 For Developers
+
+- Integrate into scripting workflows
+- Use in automation
+- Perfect for ad-hoc coordination across secure tunnels (like Tailscale, VPNs, Tor)
+
+---
+
+## 🚀 TL;DR
+
+`k4li-chat-cli` is the secure, disposable, encrypted chat tool you've always needed 
+— for when security, interoperability, and simplicity matter most.
+
+> No logins. No metadata. Just E2EE messages between peers.
+
+
+
+
 ## 🚀 Installation
 
 ### 🔧 Global (from source)

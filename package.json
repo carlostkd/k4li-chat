@@ -1,7 +1,7 @@
 {
   "name": "k4li-chat-cli",
   "version": "1.0.0",
-  "description": "A secure end-to-end encrypted chat CLI tool powered by Carlostkd.",
+  "description": "A secure end-to-end encrypted chat CLI built on ntfy.sh with ECDH key exchange and AES encryption.",
   "main": "index.js",
   "bin": {
     "k4li-chat": "./index.js"
@@ -27,6 +27,14 @@
   "engines": {
     "node": ">=16.0.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/k4li-chat-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/carlostkd/k4li-chat-cli/issues"
+  },
+  "homepage": "https://github.com/carlostkd/k4li-chat-cli#readme",
   "dependencies": {
     "axios": "^1.10.0",
     "chalk": "^5.4.1",
@@ -35,11 +43,7 @@
     "eventsource": "^4.0.0",
     "eventsource-parser": "^3.0.2",
     "inquirer": "^9.3.7",
-    "install": "^0.13.0",
-    "node-emoji": "^1.11.0",
     "node-emoji": "^2.2.0",
-    "node-fetch": "^3.3.2",
-    "npm": "^11.4.2",
     "undici": "^7.10.0"
   },
   "devDependencies": {
@@ -49,4 +53,5 @@
     "prettier": "^3.5.3"
   }
 }
+
 

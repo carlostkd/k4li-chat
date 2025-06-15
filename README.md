@@ -33,6 +33,14 @@ This will globally install `k4li-chat` as a command-line tool.
 
 ---
 
+## 🧪 Try it instantly
+
+No need to install globally:
+
+```bash
+npx k4li-chat-cli
+
+
 ## 🛠 Usage
 
 To start chatting securely:

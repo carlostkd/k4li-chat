@@ -86,6 +86,18 @@ Skip the compatibility drama. `k4li-chat-cli` works for everyone with:
 > No logins. No metadata. Just E2EE messages between peers.
 
 
+### 👻 Username Metadata Obfuscation
+
+- Usernames are not visible in message metadata for passive observers (like browsers or sysadmins).
+- All user-related data (name, message, intent) is embedded in the encrypted message body.
+- You can test this by open the browser on the same chat room while users are talking in that chat room ex: server.k4li.ch/test/sse
+
+you will only see :
+
+
+data: {"id":"F1VXGiSMJtYz","time":1750008683,"expires":1750051883,"event":"message","topic":"new","message":"{\"type\":\"public-key\",\"publicKey\":\"043dfdb7af67043e3e12fb0e7214253ab9bfc78946f0b5b4b61d3f2b90b008314f6c0f4d28f97c729d7a82f616d8e33d90d5b43392756fe610d5813524c0ab039b\",\"payload\":\"c7d8d9182320708205c5c458a8a08476:495f188311190a7edb6c7eb9f6a97a725a4ecf4cfbac15a990036e198e3a95405f4f1696423e3424c233c149f1012e8a\"}"}
+
+No usernames or other metadata are leaked!!
 
 
 ## 🚀 Installation

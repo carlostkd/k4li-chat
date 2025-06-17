@@ -100,6 +100,57 @@ data: {"id":"F1VXGiSMJtYz","time":1750008683,"expires":1750051883,"event":"messa
 No usernames or other metadata are leaked!!
 
 
+# 📁 Secure File Sharing in `k4li-chat-cli`
+
+`k4li-chat-cli` extended to support **encrypted file sharing** while preserving end-to-end encryption.
+
+---
+
+## 🔐 How it Works
+
+The system uses `ntfy`'s built-in support for attachments combined with symmetric AES encryption between peers.
+
+1. The file is encrypted with a shared key.
+2. Peers can download and decrypt the file locally.
+
+---
+
+## 🛠 CLI Usage Example
+
+### Sending a File
+```
+/sendfile path/to/document.pdf
+```
+
+- Encrypts the file with AES (shared secret with peer)
+
+
+### Receiving and Decrypting
+
+
+- Downloads the encrypted file
+- Decrypts it using the shared AES key
+- Saves it as the original filename
+
+---
+
+## 🔒 Security Notes
+
+- Files are encrypted **client-side** using the same AES-256 key used for messages.
+- The ntfy server only stores **ciphertext**, with no knowledge of the contents.
+- Metadata (like the original filename) is encrypted as well.
+
+---
+
+
+
+## ✅ Ideal For
+
+- Sharing notes, photos, PDFs between trusted peers
+- Secure collaboration while traveling or on untrusted networks
+- Anonymous dropboxes (when combined with anonymous usernames)
+
+
 ## 🚀 Installation
 
 ### 🔧 Global (from source)
